@@ -1,0 +1,8 @@
+{
+  "name": "AuraEvent AI — Intelligent Event Planner & Collaborative Dashboard",
+  "description": "GenAI-powered planning assistant to organize weddings, birthdays, and community events with smart budgets, interactive timelines, vendor checklists, personalized ideas, and real-time collaborative editing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
