@@ -1,4 +1,4 @@
-import { EventPlan, CreativeIdea } from '../types/event';
+import { EventPlan, CreativeIdea, BudgetItem, TimelinePhase, DayOfScheduleItem, VendorItem } from '../types/event';
 
 export interface PlanGenerationParams {
   eventType: string;
@@ -11,7 +11,74 @@ export interface PlanGenerationParams {
   specialNotes?: string;
 }
 
-export function synthesizeLocalPlan(params: PlanGenerationParams) {
+export interface AIPlanResult {
+  theme: string;
+  vibeKeywords: string[];
+  notes: string;
+  budgetItems: Array<{
+    category: string;
+    title: string;
+    estimatedCost: number;
+    notes?: string;
+    priority?: string;
+  }>;
+  timelinePhases: Array<{
+    name: string;
+    timeframe: string;
+    items: Array<{
+      title: string;
+      description: string;
+      category?: string;
+    }>;
+  }>;
+  dayOfSchedule: Array<{
+    time: string;
+    title: string;
+    location: string;
+    leadPerson: string;
+    notes: string;
+  }>;
+  vendors: Array<{
+    category: string;
+    name: string;
+    notes: string;
+    quotedPrice: number;
+    tags: string[];
+  }>;
+  creativeIdeas: Array<{
+    category: string;
+    title: string;
+    description: string;
+    estimatedCostTier: '$' | '$$' | '$$$';
+    tags: string[];
+  }>;
+}
+
+export interface BudgetOptimizationResult {
+  summaryScore: string;
+  totalAllocated: number;
+  savingsPotential: number;
+  strategicTips: Array<{
+    category: string;
+    insight: string;
+    recommendation: string;
+    estimatedSavings: number;
+  }>;
+  vendorNegotiationTips: string[];
+  contingencyAssessment: string;
+}
+
+export interface ChatbotResponse {
+  reply: string;
+  modelUsed: string;
+  roleUsed: string;
+  suggestions: string[];
+}
+
+/**
+ * Synthesizes a balanced fallback master plan locally when offline or during transient network delays.
+ */
+export function synthesizeLocalPlan(params: PlanGenerationParams): AIPlanResult {
   const total = Number(params.budget) || 25000;
   const count = Number(params.guestCount) || 80;
   const title = params.title || `${params.eventType.toUpperCase()} Celebration`;
