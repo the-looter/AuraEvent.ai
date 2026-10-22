@@ -142,8 +142,15 @@ export default function App() {
         onSwitchCollaborator={setCurrentCollaborator}
       />
 
-      {/* Main Content Area - Fully Interactive across ALL Tabs */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      {/* Main Content Area - Fully Accessible Landmark & Tabpanel */}
+      <main
+        id="main-content"
+        role="tabpanel"
+        id-tabpanel={`tabpanel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+        tabIndex={-1}
+        className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 focus:outline-none"
+      >
         {activeTab === 'overview' && (
           <EventOverview
             event={currentEvent}

@@ -324,17 +324,19 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => setEditingItem(item)}
-                            className="p-1 text-slate-400 hover:text-slate-700 rounded transition-colors"
+                            className="p-1 text-slate-400 hover:text-slate-700 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            aria-label={`Edit ${item.title}`}
                             title="Edit"
                           >
-                            <Edit3 className="w-3.5 h-3.5" />
+                            <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                           <button
                             onClick={() => handleDeleteItem(item.id, item.title)}
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded transition-colors"
+                            className="p-1 text-slate-400 hover:text-rose-600 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500"
+                            aria-label={`Delete ${item.title}`}
                             title="Delete"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                         </div>
                       </td>
@@ -349,22 +351,28 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
 
       {/* AI Budget Optimization Insights Drawer / Modal */}
       {isOptimizerOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="optimizer-modal-title"
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-slate-200 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                <div className="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600" aria-hidden="true">
                   <Sparkles className="w-4 h-4" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 font-display">
+                <h3 id="optimizer-modal-title" className="text-base font-bold text-slate-900 font-display">
                   AI Financial & Optimization Analysis
                 </h3>
               </div>
               <button
                 onClick={() => setIsOptimizerOpen(false)}
-                className="text-slate-400 hover:text-slate-700"
+                aria-label="Close financial analysis modal"
+                className="text-slate-400 hover:text-slate-700 p-1 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 

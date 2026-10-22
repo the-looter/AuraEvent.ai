@@ -209,17 +209,22 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-event-modal-title"
+    >
       <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-xs">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-xs" aria-hidden="true">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 font-display">
+              <h3 id="create-event-modal-title" className="text-base font-bold text-slate-900 font-display">
                 Create Event Plan
               </h3>
               <p className="text-xs text-slate-500">
@@ -227,8 +232,12 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700">
-            <X className="w-5 h-5" />
+          <button
+            onClick={onClose}
+            aria-label="Close create event modal"
+            className="text-slate-400 hover:text-slate-700 p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -237,10 +246,10 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           
           {/* Event Type Selector */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-1.5">
+            <span id="event-category-label" className="block font-semibold text-slate-700 mb-1.5">
               Event Category
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            </span>
+            <div role="radiogroup" aria-labelledby="event-category-label" className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
                 { id: 'wedding', label: 'Wedding', icon: '💍' },
                 { id: 'birthday', label: 'Birthday', icon: '🎂' },
@@ -250,14 +259,16 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 <button
                   type="button"
                   key={t.id}
+                  role="radio"
+                  aria-checked={eventType === t.id}
                   onClick={() => setEventType(t.id as EventType)}
-                  className={`p-2.5 rounded-lg border text-left transition-all ${
+                  className={`p-2.5 rounded-lg border text-left transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                     eventType === t.id
                       ? 'border-indigo-600 bg-indigo-50/60 ring-1 ring-indigo-600 font-semibold text-indigo-900'
                       : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="text-base mb-1">{t.icon}</div>
+                  <div className="text-base mb-1" aria-hidden="true">{t.icon}</div>
                   <div className="text-xs font-semibold">{t.label}</div>
                 </button>
               ))}
@@ -266,10 +277,11 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
           {/* Event Title */}
           <div>
-            <label className="block font-medium text-slate-700 mb-1">
+            <label htmlFor="create-event-title-input" className="block font-medium text-slate-700 mb-1">
               Event Name / Working Title <span className="text-indigo-600">*</span>
             </label>
             <input
+              id="create-event-title-input"
               type="text"
               required
               placeholder={eventType === 'wedding' ? 'e.g. Maya & Alex\'s Wedding' : eventType === 'birthday' ? 'e.g. Lucas\'s 30th Birthday Bash' : eventType === 'community' ? 'e.g. Spring Artisans & Food Fair' : 'e.g. Annual Gala Celebration'}
@@ -282,8 +294,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           {/* Date & Location */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-medium text-slate-700 mb-1">Event Date</label>
+              <label htmlFor="create-event-date-input" className="block font-medium text-slate-700 mb-1">Event Date</label>
               <input
+                id="create-event-date-input"
                 type="date"
                 required
                 value={date}
@@ -292,8 +305,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               />
             </div>
             <div>
-              <label className="block font-medium text-slate-700 mb-1">Location / Venue</label>
+              <label htmlFor="create-event-location-input" className="block font-medium text-slate-700 mb-1">Location / Venue</label>
               <input
+                id="create-event-location-input"
                 type="text"
                 placeholder="e.g. Hilltop Vineyard, Brooklyn Loft, Town Square"
                 value={location}
@@ -306,8 +320,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           {/* Guests & Total Budget */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-medium text-slate-700 mb-1">Estimated Guest Count</label>
+              <label htmlFor="create-event-guests-input" className="block font-medium text-slate-700 mb-1">Estimated Guest Count</label>
               <input
+                id="create-event-guests-input"
                 type="number"
                 min="5"
                 max="5000"
@@ -317,8 +332,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               />
             </div>
             <div>
-              <label className="block font-medium text-slate-700 mb-1">Total Target Budget ($)</label>
+              <label htmlFor="create-event-budget-input" className="block font-medium text-slate-700 mb-1">Total Target Budget ($)</label>
               <input
+                id="create-event-budget-input"
                 type="number"
                 min="500"
                 step="500"
@@ -331,10 +347,11 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
           {/* Theme & Vibe */}
           <div>
-            <label className="block font-medium text-slate-700 mb-1">
+            <label htmlFor="create-event-vibe-input" className="block font-medium text-slate-700 mb-1">
               Aesthetic Vibe & Atmosphere
             </label>
             <input
+              id="create-event-vibe-input"
               type="text"
               placeholder="e.g. Warm candlelight, organic florals, acoustic live music, artisan cocktails"
               value={vibe}

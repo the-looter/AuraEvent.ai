@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -13,7 +14,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
-app.use(express.json({ limit: '10mb' }));
+// Security Middleware: HTTP headers hardening
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Vite dev and client-side styling compatibility
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
+// Payload size limit to prevent Denial of Service
+app.use(express.json({ limit: '2mb' }));
 
 // Helper to safely check if valid API key is present
 const hasValidApiKey = (): boolean => {
@@ -343,7 +353,7 @@ Return ONLY valid JSON matching this schema:
     });
 
     const response = await withTimeout(apiCall, 18000);
-    const parsed = JSON.parse(response.text || '{}');
+    const parsed = parseJsonSafely(response.text || '') || {};
     if (parsed.budgetItems && parsed.budgetItems.length > 0) {
       return res.json({ success: true, plan: parsed });
     }
@@ -573,8 +583,11 @@ Return JSON with:
       config: { responseMimeType: 'application/json' },
     });
     const response = await withTimeout(apiCall, 12000);
-    const parsed = JSON.parse(response.text || '{}');
-    return res.json({ success: true, analysis: parsed });
+    const parsed = parseJsonSafely(response.text || '') || {};
+    if (parsed.summaryScore || parsed.strategicTips) {
+      return res.json({ success: true, analysis: parsed });
+    }
+    return res.json({ success: true, analysis: fallbackAnalysis });
   } catch (err: any) {
     console.warn('Budget optimizer fallback triggered:', err?.message);
     return res.json({ success: true, analysis: fallbackAnalysis });
